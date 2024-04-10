@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-PagamentosApplication<pagamentos>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "br.com.food.pagamentos.PagamentosApplication",
+      "projectName": "pagamentos",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
