@@ -2,11 +2,28 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ServerApplication",
+      "request": "launch",
+      "mainClass": "br.com.food.server.ServerApplication"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-PagamentosApplication<pagamentos>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "mainClass": "br.com.food.pagamentos.PagamentosApplication",
       "projectName": "pagamentos",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=39863 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=pagamentos"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-EurekaServerApplication<server>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "br.com.food.server.EurekaServerApplication",
+      "projectName": "server",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }
