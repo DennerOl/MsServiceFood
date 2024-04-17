@@ -22,7 +22,10 @@ import br.com.food.pagamentos.dto.PagamentoDto;
 import br.com.food.pagamentos.service.PagamentoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
+@Slf4j
 @RestController
 @RequestMapping("/pagamentos")
 public class PagamentoController {
@@ -63,8 +66,13 @@ public class PagamentoController {
 
   // comunicação sincrona openFein atualiza pagamento pedido
   @PatchMapping("/{id}/confirmar")
+  @CircuitBreaker(name = "atualizaPedido", fallbackMethod = "pagamentoAutorizadoComIntegracaoPendente")
   public void confirmarPagamento(@PathVariable @NotNull Long id) {
     service.confirmarPagamento(id);
+  }
+
+  public void pagamentoAutorizadoComIntegracaoPendente(Long id, Exception e) {
+    service.alteraStatus(id);
   }
 
 }
