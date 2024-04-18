@@ -1,7 +1,9 @@
 package br.com.food.pagamentos.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import br.com.food.pagamentos.model.ItemDoPedido;
 import br.com.food.pagamentos.model.Status;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +21,6 @@ public class PagamentoDto {
   private Status status;
   private Long formaDePagamentoId;
   private Long pedidoId;
+  private List<ItemDoPedido> itens;
 
 }
