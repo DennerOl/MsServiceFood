@@ -2,7 +2,6 @@ package br.com.food.pagamentos.controller;
 
 import java.net.URI;
 
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +21,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.food.pagamentos.dto.PagamentoDto;
 import br.com.food.pagamentos.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Slf4j
 @RestController
@@ -54,7 +53,7 @@ public class PagamentoController {
     PagamentoDto pagamento = service.criarPagamento(dto);
     URI endereco = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
-    rabbitTemplate.convertAndSend("pagamento.concluido", pagamento);
+    rabbitTemplate.convertAndSend("pagamentos.ex", "", pagamento);
     return ResponseEntity.created(endereco).body(pagamento);
   }
 
