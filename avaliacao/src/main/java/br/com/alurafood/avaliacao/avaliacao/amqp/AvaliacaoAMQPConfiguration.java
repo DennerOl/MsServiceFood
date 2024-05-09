@@ -18,22 +18,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AvaliacaoAMQPConfiguration {
     @Bean
-    public Jackson2JsonMessageConverter messageConverter(){
-        return  new Jackson2JsonMessageConverter();
+    public Jackson2JsonMessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         Jackson2JsonMessageConverter messageConverter){
+            Jackson2JsonMessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
-        return  rabbitTemplate;
+        return rabbitTemplate;
     }
 
     @Bean
     public Queue filaDetalhesAvaliacao() {
         return QueueBuilder
                 .nonDurable("pagamentos.detalhes-avaliacao")
+                .deadLetterExchange("pagamentos.dlx")
                 .build();
     }
 
@@ -45,7 +46,7 @@ public class AvaliacaoAMQPConfiguration {
     }
 
     @Bean
-    public Binding bindPagamentoPedido(FanoutExchange fanoutExchange) {
+    public Binding bindPagamentoPedido() {
         return BindingBuilder
                 .bind(filaDetalhesAvaliacao())
                 .to(fanoutExchange());
@@ -61,4 +62,24 @@ public class AvaliacaoAMQPConfiguration {
         return event -> rabbitAdmin.initialize();
     }
 
+    @Bean
+    public FanoutExchange deadLetterExchange() {
+        return ExchangeBuilder
+                .fanoutExchange("pagamentos.dlx")
+                .build();
+    }
+
+    @Bean
+    public Queue filaDlqDetalhesAvaliacao() {
+        return QueueBuilder
+                .nonDurable("pagamentos.detalhes-dlq")
+                .build();
+    }
+
+    @Bean
+    public Binding bindDlxPagamentoPedido() {
+        return BindingBuilder
+                .bind(filaDlqDetalhesAvaliacao())
+                .to(deadLetterExchange());
+    }
 }
